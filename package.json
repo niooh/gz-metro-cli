@@ -1,0 +1,12 @@
+{
+  "name": "gz-metro",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/gzmetro.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}
