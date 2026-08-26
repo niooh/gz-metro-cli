@@ -5,11 +5,9 @@ export interface HeapItem {
 
 /** Min-heap keyed on `cost`, used by Dijkstra's algorithm. */
 export class MinHeap {
-  private readonly heap: HeapItem[] = [];
+  private heap: HeapItem[] = [];
 
-  size(): number {
-    return this.heap.length;
-  }
+  size(): number { return this.heap.length; }
 
   push(item: HeapItem): void {
     this.heap.push(item);
@@ -18,7 +16,7 @@ export class MinHeap {
 
   pop(): HeapItem | undefined {
     if (this.heap.length === 0) return undefined;
-    const top = this.heap[0];
+    const top = this.heap[0]!;
     const end = this.heap.pop()!;
     if (this.heap.length > 0) {
       this.heap[0] = end;
@@ -49,6 +47,7 @@ export class MinHeap {
       if (r < len && this.heap[r]!.cost < this.heap[smallest]!.cost) smallest = r;
       if (smallest === i) break;
       this.heap[i] = this.heap[smallest]!;
+      this.heap[smallest] = item;
       i = smallest;
     }
     this.heap[i] = item;
