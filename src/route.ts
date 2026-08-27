@@ -4,10 +4,7 @@ import type {
   RideStep,
   RouteResult,
 } from './types.ts';
-
-const YELLOW = '\x1b[33m';
-const RESET = '\x1b[0m';
-const GRAY = '\x1b[90m';
+import { yellow, gray, bold } from './colors.ts';
 
 /**
  * Returns the terminus name to display as the direction of travel.
@@ -128,19 +125,20 @@ function formatLineName(line: string): string {
  */
 export function formatRoute(result: RouteResult): string {
   const out: string[] = [];
-  out.push(`From ${result.start} to ${result.dest}`);
+
+  out.push(`Target: ${bold(result.start)} ${gray('->')} ${bold(result.dest)}`);
   out.push('');
 
   for (const step of result.steps) {
     const name = formatLineName(step.line);
     const dir = step.direction ? ` ${step.direction}` : '';
-    out.push(`${YELLOW}${name}${RESET}${dir}`);
-    out.push(step.stations.join(` ${GRAY}->${RESET} `));
+    out.push(`${yellow(name)}${gray(dir)}`);
+    out.push(step.stations.join(` ${gray('->')} `));
     out.push('');
   }
 
-  out.push(`Total time: ${result.totalCost} min`);
-  out.push(`Stations: ${result.stationSegments}, Transfers: ${result.transferCount}`);
+  out.push(`Total time: ${bold(result.totalCost)} min`);
+  out.push(`Stations: ${bold(result.stationSegments)}, Transfers: ${bold(result.transferCount)}`);
 
   return out.join('\n');
 }
