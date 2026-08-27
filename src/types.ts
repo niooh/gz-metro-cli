@@ -56,8 +56,6 @@ export interface RouteError {
   error: string;
 }
 
-export type FindRouteResult = RouteResult | RouteError;
-
 export interface MetroGraph {
   linesByStation: Map<string, Set<string>>;
   stationsByLine: Map<string, string[]>;

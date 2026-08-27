@@ -7,24 +7,7 @@ import type {
 
 const YELLOW = '\x1b[33m';
 const RESET = '\x1b[0m';
-
-interface PrevEntry {
-  prevKey: string;
-  edge: MetroEdge;
-}
-
-/** Reconstructs the ordered edge list from the prev-pointer map. */
-function traceEdges(targetKey: string, prev: Map<string, PrevEntry>): MetroEdge[] {
-  const edges: MetroEdge[] = [];
-  let key: string | undefined = targetKey;
-  while (key) {
-    const entry = prev.get(key);
-    if (!entry) break;
-    edges.unshift(entry.edge);
-    key = entry.prevKey;
-  }
-  return edges;
-}
+const GRAY = '\x1b[90m';
 
 /**
  * Returns the terminus name to display as the direction of travel.
@@ -46,9 +29,9 @@ function getDirection(
   const idxFirst = route.indexOf(first ?? '');
   const idxLast = route.indexOf(last ?? '');
   if (idxFirst === -1 || idxLast === -1) return '';
-
-  if (idxFirst < idxLast) return `${route[route.length - 1]} direction`;
-  if (idxFirst > idxLast) return `${route[0]} direction`;
+  // show direction
+  if (idxFirst < idxLast) return `${GRAY}>>${RESET} ${route[route.length - 1]}`;
+  if (idxFirst > idxLast) return `${GRAY}>>${RESET} ${route[0]}`;
   return '';
 }
 
@@ -109,26 +92,18 @@ function collectSteps(
 }
 
 /**
- * Builds a structured RouteResult from the Dijkstra prev-pointer map.
- *
- * @param graph - The metro graph (used to determine line directions).
- * @param targetKey - The destination state node key.
- * @param totalCost - Total travel cost in minutes.
- * @param prev - Prev-pointer map produced by Dijkstra's algorithm.
+ * Builds a RouteResult directly from an ordered list of edges.
+ * This is used when we have already reconstructed a full path.
  */
-export function buildRoute(
+export function buildRouteFromEdges(
   graph: MetroGraph,
-  targetKey: string,
+  edges: MetroEdge[],
   totalCost: number,
-  prev: Map<string, PrevEntry>,
 ): RouteResult {
-  const edges = traceEdges(targetKey, prev);
   const { steps, stationSegments, transferCount } = collectSteps(graph, edges);
-
   const startStation = edges[0]?.type === 'ride' ? edges[0].fromStation : '';
   const lastEdge = edges[edges.length - 1];
   const destStation = lastEdge?.type === 'ride' ? lastEdge.toStation : '';
-
   return {
     start: startStation,
     dest: destStation,
@@ -138,7 +113,6 @@ export function buildRoute(
     totalCost,
   };
 }
-
 /** Maps internal line identifiers to human-readable names. */
 function formatLineName(line: string): string {
   if (line === '3_1') return 'North extension of Line 3';
@@ -161,7 +135,7 @@ export function formatRoute(result: RouteResult): string {
     const name = formatLineName(step.line);
     const dir = step.direction ? ` ${step.direction}` : '';
     out.push(`${YELLOW}${name}${RESET}${dir}`);
-    out.push(step.stations.join(' -> '));
+    out.push(step.stations.join(` ${GRAY}->${RESET} `));
     out.push('');
   }
 

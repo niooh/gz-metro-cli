@@ -1,21 +1,15 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-import type { FindRouteResult, MetroOptions, RouteResult } from './types.ts';
+import type { MetroOptions } from './types.ts';
 import { lines } from './lines.ts';
 import { buildGraph } from './graph.ts';
-import { findBestRoute } from './dijkstra.ts';
+import { findAllBestRoutes } from './dijkstra.ts';
 import { formatRoute } from './route.ts';
 
-const DEFAULT_SEGMENT_TIME = 2;   // minutes per station
-const DEFAULT_TRANSFER_TIME = 6;  // minutes per transfer
+const DEFAULT_SEGMENT_TIME = 2;
+const DEFAULT_TRANSFER_TIME = 6;
 
-/**
- * High-level metro route planner.
- *
- * Owns the graph state built from the static line data. Thin wrapper around
- * the pure graph/dijkstra/route modules for convenient reuse.
- */
 export class MetroSystem {
   private readonly graph: ReturnType<typeof buildGraph>;
 
@@ -28,33 +22,47 @@ export class MetroSystem {
     );
   }
 
-  findBestRoute(start: string, dest: string): FindRouteResult {
-    return findBestRoute(this.graph, start, dest);
-  }
-
-  formatRoute(result: RouteResult): string {
-    return formatRoute(result);
+  findAllBestRoutes(start: string, dest: string) {
+    return findAllBestRoutes(this.graph, start, dest);
   }
 }
 
 function main(): void {
   const args = process.argv.slice(2);
+  const showAllIndex = args.indexOf('--show-all');
+  const showAll = showAllIndex !== -1;
+  if (showAll) {
+    args.splice(showAllIndex, 1);
+  }
+
   if (args.length < 2) {
-    console.error('Usage: node src/gzmetro.ts <departure> <destination>');
+    console.error('Usage: node src/gzmetro.ts [--show-all] <departure> <destination>');
     console.error('Example: node src/gzmetro.ts "公园前" "广州南站"');
+    console.error('         node src/gzmetro.ts --show-all "公园前" "广州南站"');
     process.exit(1);
   }
 
   const [start, dest] = args as [string, string];
   const metro = new MetroSystem();
-  const result = metro.findBestRoute(start, dest);
+  const result = metro.findAllBestRoutes(start, dest);
 
   if ('error' in result) {
     console.error(`✗ ${result.error}`);
     process.exit(1);
   }
 
-  console.log(metro.formatRoute(result));
+  if (showAll) {
+    console.log(`Found ${result.routes.length} route(s) with the same minimum time:\n`);
+    result.routes.forEach((route, i) => {
+      console.log(`- Route ${i + 1} (transfers: ${route.transferCount})`);
+      console.log(formatRoute(route));
+      console.log();
+    });
+  } else {
+    // Default: print the route with the fewest transfers among shortest-time routes
+    const bestRoute = result.routes[0]!;
+    console.log(formatRoute(bestRoute));
+  }
 }
 
 // Run CLI only when invoked directly
