@@ -30,8 +30,8 @@ function getDirection(
   const idxLast = route.indexOf(last ?? '');
   if (idxFirst === -1 || idxLast === -1) return '';
   // show direction
-  if (idxFirst < idxLast) return `${GRAY}>>${RESET} ${route[route.length - 1]}`;
-  if (idxFirst > idxLast) return `${GRAY}>>${RESET} ${route[0]}`;
+  if (idxFirst < idxLast) return ` ${route[route.length - 1]} 方向`;
+  if (idxFirst > idxLast) return ` ${route[0]} 方向`;
   return '';
 }
 

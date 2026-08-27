@@ -37,8 +37,8 @@ function main(): void {
 
   if (args.length < 2) {
     console.error('Usage: node src/gzmetro.ts [--show-all] <departure> <destination>');
-    console.error('Example: node src/gzmetro.ts "公园前" "广州南站"');
-    console.error('         node src/gzmetro.ts --show-all "公园前" "广州南站"');
+    console.error('Example: node src/cli.ts "公园前" "广州南站"');
+    console.error('         node src/cli.ts --show-all "公园前" "广州南站"');
     process.exit(1);
   }
 
