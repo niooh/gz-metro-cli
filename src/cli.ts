@@ -125,7 +125,7 @@ function main(): void {
   if (showAll) {
     console.log(`Found ${result.routes.length} route(s) with the same minimum time:\n`);
     result.routes.forEach((route, i) => {
-      console.log(`- Route ${i + 1} (transfers: ${route.transferCount})`);
+      console.log(`- ${blue(`Route ${i + 1}`)}`);
       console.log(formatRoute(route));
       console.log();
     });
