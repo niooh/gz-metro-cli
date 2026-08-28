@@ -119,7 +119,7 @@ function main(): void {
 
   if ('error' in result) {
     console.error(`✗ ${result.error}`);
-    process.exit(1);
+    return;
   }
 
   if (showAll) {

@@ -136,9 +136,9 @@ export function formatRoute(result: RouteResult): string {
     out.push(step.stations.join(` ${gray('->')} `));
     out.push('');
   }
-
-  out.push(`Total time: ${bold(result.totalCost)} min`);
-  out.push(`Stations: ${bold(result.stationSegments)}, Transfers: ${bold(result.transferCount)}`);
+  
+  out.push(`Total time: ${bold(String(result.totalCost))} min`);
+  out.push(`Stations: ${bold(String(result.stationSegments))}, Transfers: ${bold(String(result.transferCount))}`);
 
   return out.join('\n');
 }
