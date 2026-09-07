@@ -1,8 +1,8 @@
 ## Introduction
 
-  用于广州地铁路线检索的简易实验性 CLI，供个人使用。
+  用于广州地铁路线检索的简易 CLI，供个人使用。
 
-  A simple experimental CLI for Guangzhou Metro.
+  A simple CLI for Guangzhou Metro.
 
 ## Requirements
 
