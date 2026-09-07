@@ -11,10 +11,12 @@
 
 ## Usage
 
+- 直接运行：
+
 ```bash
 # 同步并进入项目
-git clone …
-cd …
+git clone https://github.com/niooh/gz-metro-cli
+cd gz-metro-cli/
 
 # 给出最短时间路线
 node src/cli.ts "北山" "沙园"  # 北山 -> 沙园；只展示最少转站路线
@@ -25,4 +27,11 @@ node src/cli.ts station "北"
 
 # 列举指定线路的站点
 node src/cli.ts line "1"
+```
+
+- 如果需要打包为单个 JS 文件：
+
+```bash
+npm install && npm run build
+# 现在可以 node dist/cli.js
 ```

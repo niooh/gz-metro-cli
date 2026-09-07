@@ -9,7 +9,7 @@ import { formatRoute } from './route.ts';
 import { yellow, blue, gray, bold } from './colors.ts';
 
 
-const DEFAULT_SEGMENT_TIME = 2;
+const DEFAULT_SEGMENT_TIME = 2.5;
 const DEFAULT_TRANSFER_TIME = 6;
 
 export class MetroSystem {
