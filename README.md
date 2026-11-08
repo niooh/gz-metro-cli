@@ -19,8 +19,8 @@ git clone https://github.com/niooh/gz-metro-cli
 cd gz-metro-cli/
 
 # 给出最短时间路线
-node src/cli.ts "北山" "沙园"  # 北山 -> 沙园；只展示最少转站路线
-node src/cli.ts --show-all "北山" "沙园"  # 展示所有路线
+node src/cli.ts 北山 沙园  # 北山 -> 沙园；只展示最少转站路线
+node src/cli.ts --show-all 北山 沙园  # 展示所有路线
 
 # 列举包含指定内容的站点及其所属路线
 node src/cli.ts station "北"

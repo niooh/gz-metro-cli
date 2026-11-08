@@ -10,7 +10,7 @@ import { yellow, blue, gray, bold } from './colors.ts';
 
 
 const DEFAULT_SEGMENT_TIME = 2.5;
-const DEFAULT_TRANSFER_TIME = 6;
+const DEFAULT_TRANSFER_TIME = 8; // 6-8 is possible
 
 export class MetroSystem {
   private readonly graph: ReturnType<typeof buildGraph>;
@@ -28,7 +28,7 @@ export class MetroSystem {
     return findAllBestRoutes(this.graph, start, dest);
   }
 
-  /** 查找站名中包含指定内容的所有站点及其所属线路。 */
+  /** Find all stations whose name contains the given query, along with the lines they belong to. */
   listStationsContaining(query: string) {
     const results: { station: string; lines: string[] }[] = [];
     for (const [station, lineSet] of this.graph.linesByStation) {
@@ -39,7 +39,7 @@ export class MetroSystem {
     return results.sort((a, b) => a.station.localeCompare(b.station, 'zh-CN'));
   }
 
-  /** 按线路名称精确匹配，返回该线所有站点。 */
+  /** Match by exact line name and return all stations on that line. */
   getLineStations(lineName: string): string[] | undefined {
     return this.graph.stationsByLine.get(lineName);
   }
@@ -70,7 +70,7 @@ function printLine(lineName: string, metro: MetroSystem): void {
 function main(): void {
   const args = process.argv.slice(2);
 
-  // 子命令：station
+  // Subcommand: station
   if (args[0] === 'station') {
     if (args.length < 2) {
       console.error('Usage: node cli.ts station <query>');
@@ -82,7 +82,7 @@ function main(): void {
     return;
   }
 
-  // 子命令：line
+  // Subcommand: line
   if (args[0] === 'line') {
     if (args.length < 2) {
       console.error('Usage: node cli.ts line <line>');
@@ -94,7 +94,7 @@ function main(): void {
     return;
   }
 
-  // 原路线查询
+  // Original route query
   const showAllIndex = args.indexOf('--show-all');
   const showAll = showAllIndex !== -1;
   if (showAll) {
@@ -102,10 +102,11 @@ function main(): void {
   }
 
   if (args.length < 2) {
-    console.error('Usage: node cli.ts [--show-all] <departure> <destination>');
-    console.error('       node cli.ts station <query>');
-    console.error('       node cli.ts line <line>');
-    console.error('Examples:');
+    console.error(bold('\nUsage:'))
+    console.error('  node cli.ts [--show-all] <departure> <destination>');
+    console.error('  node cli.ts station <query>');
+    console.error('  node cli.ts line <line-name>');
+    console.error(bold('\nExamples:'));
     console.error('  node cli.ts "公园前" "广州南站"');
     console.error('  node cli.ts --show-all "公园前" "广州南站"');
     console.error('  node cli.ts station "广州"');
